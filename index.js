@@ -17,7 +17,7 @@ let recetaFacil={
   level: "Easy Peasy",
   ingredients: ["carne","cebolla","papas","pimenton","huevos","aceite","perejil","comino","pimienta","sal"],
   cuisine: "Argentina",
-  DishType: "empanaditas",
+  DishType: "other",
   image: "https://www.paulinacocina.net/wp-content/uploads/2022/01/empanadas-saltenas-800x535.jpg",
   duration: 30,
   creator: "Paulina"
@@ -33,30 +33,35 @@ mongoose
     // Before adding any recipes to the database, let's remove all existing ones
     return Recipe.deleteMany()
   })
-  .then(() => {
+  .then((romoaldo) => {
     // Run your code here, after you have insured that the connection was made
-    Recipe.create(recetaFacil)
+    console.log("You've just deleted:",romoaldo);
+    return Recipe.create(recetaFacil);
     //console.log(this.title);
   })
-  .then(()=>{
+  .then((creation)=>{
+    console.log("You've just created:",creation);;
    return Recipe.insertMany(recetario);
     //console.log(recetario.title)
   })
   .then((allRecipesArray)=>{
     //console.log(allRecipesArray);
     allRecipesArray.forEach((oneRecipe)=>{
-      //console.log(oneRecipe.title);
+      console.log(oneRecipe.title);
     })
-    return Recipe.findOneAndUpdate(query, { $set: { duration: 100 }});
+    return Recipe.findOneAndUpdate(query, { $set: { duration: 100 }},{new:true});
     
   })
   .then((cambio)=>{
-    //console.log("success");
+    console.log("success updating:", cambio.title, "is now", cambio.duration );
     return Recipe.deleteOne({ title: 'Carrot Cake' });
   })
   .then((roberto)=>{
-    console.log("roberto");
+    console.log("Success deleting:",roberto);
+    return mongoose.disconnect();
+    // return mongoose.connection.close(); //other way to do it.
   })
+  .then(()=> console.log("Connection closed"))
   .catch(error => {
     console.error('Error connecting to the database', error);
   });
